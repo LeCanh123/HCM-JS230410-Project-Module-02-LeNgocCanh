@@ -22,17 +22,21 @@ import SearchBar from "./SearchBar";
 import SideBar from "./Sidebar";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { logout } from "../../redux/authReducer/action";
+import { signOut } from "../../redux/authReducer/reducer";
 import axios from "axios";
 import { addToCart } from "../../redux/cartReducer/reducer";
 // import NavbarTop from "./NavbarTop";
+import { addToCart1 } from "../../redux/cartReducer/reducer";
+
+
+
+
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = useToast();
   let { isAuth, afterLoginUser } = useSelector((state) => {
-    console.log("🚀 ~ file: Navbar.jsx:35 ~ Navbar ~ state:", state)
     return state.AuthReducer
   })
   const { cartItems } = useSelector((store) => store.cartReducer);
@@ -48,7 +52,7 @@ const Navbar = () => {
         // dispatch(addToCart(res.data));
         res.data.forEach((item)=>{
           if(item.id==afterLoginUser.email){
-            localStorage.setItem("cartItems",item.product.length)
+            dispatch(addToCart1())
           }
         })
 
@@ -56,7 +60,7 @@ const Navbar = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [cartItems]);///////////////////////////////////////////////////cartItems
+  }, [cartItems.length]);///////////////////////////////////////////////////cartItems
   return (
     <Box
       position={"sticky"}
@@ -138,7 +142,7 @@ const Navbar = () => {
                     _hover={{ backgroundColor: "pink" }}
                     backgroundColor="#fdb852"
                     onClick={() => {
-                      dispatch(logout);
+                      dispatch(signOut());
                       toast({
                         title: "User Logout Successfully.",
                         description: "Come Back Again Soon",
@@ -190,7 +194,7 @@ const Navbar = () => {
                 borderRadius={"50%"}
                 bg="#d53f8c"
               >
-                <Text> {isAuth?localStorage.getItem("cartItems"):0}</Text>
+                <Text> {isAuth?cartItems.length:0}</Text>
               </Box>
             </Flex>
           </Link>

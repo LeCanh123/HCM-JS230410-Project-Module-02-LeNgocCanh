@@ -24,6 +24,7 @@ import {
   decrementQuantity,
   incrementQuantity,
   removeFromCart,
+  handleRemove
 } from "../redux/cartReducer/reducer";
 import axios from "axios";
 import Navbar from "../Components/Home/Navbar";
@@ -37,47 +38,67 @@ export const Cart = () => {
   const { cartItems } = useSelector((store) => {
     return store.cartReducer
   })
+  const cartItems1=useSelector((store) => {
+    return store.cartReducer
+  })
 
+
+
+
+
+
+  console.log(cartItems);
   let saved = 0;
   const getData = () => {
     axios
-      .get(process.env.REACT_APP_HOST+`cart`)
+      .get(process.env.REACT_APP_HOST+`cart1`)
       .then((res) => {
-        dispatch(addToCart1(res.data));
+        // dispatch(addToCart1(res.data));
+        res.data.forEach(element => {
+          if(element.id==afterLoginUser.email){
+            dispatch(addToCart(element.product));
+          }
+        });;
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+
+
+
   const handleDelete = (e) => {
-    let { id, title } = e;
-    axios
-      .delete(process.env.REACT_APP_HOST+`cart/${id}`)
-      .then((res) => {
-        dispatch(removeFromCart(id));
-        toast({
-          title: `${title}`,
-          description: "Deleted from Cart",
-          status: "success",
-          duration: 2000,
-          position: "top",
-          isClosable: true,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    dispatch(handleRemove(cartItems,e,afterLoginUser.email));
+    
+    setTimeout(()=>{
+      getData();
+    },1)
+    toast({
+      title: "Removed from cart",
+      description: "Deleted from Cart",
+      status: "success",
+      position: "top",
+      duration: 1000,
+      isClosable: true,
+    });
+
   };
 
   const handleINC = (id, VAL) => {
-    console.log(id, VAL);
+    let newCartItem=cartItems.map((item,ind)=>{
+if(ind!=VAL){
+  return item
+}else{
+  return {...item,quantity:item.quantity+1}
+}
+    })
     axios
-      .patch(process.env.REACT_APP_HOST+`cart/${id}`, {
-        quantity: VAL,
+      .put(process.env.REACT_APP_HOST+`cart1/`+afterLoginUser.email, {
+       id:afterLoginUser.email,product:[...newCartItem]
       })
       .then((res) => {
-        dispatch(incrementQuantity(id));
+        dispatch(incrementQuantity(res.data));
         // getData();
       })
       .catch((err) => {
@@ -86,13 +107,19 @@ export const Cart = () => {
   };
 
   const handleDEC = (id, VAL) => {
-    console.log(id, VAL);
+    let newCartItem=cartItems.map((item,ind)=>{
+if(ind!=VAL){
+  return item
+}else{
+  return {...item,quantity:item.quantity-1}
+}
+    })
     axios
-      .patch(process.env.REACT_APP_HOST+`cart/${id}`, {
-        quantity: VAL,
+      .put(process.env.REACT_APP_HOST+`cart1/`+afterLoginUser.email, {
+       id:afterLoginUser.email,product:[...newCartItem]
       })
       .then((res) => {
-        dispatch(decrementQuantity(id));
+        dispatch(incrementQuantity(res.data));
         // getData();
       })
       .catch((err) => {
@@ -103,6 +130,7 @@ export const Cart = () => {
   const getTotalPrice = () => {
     return cartItems.reduce((total, e) => total + e.price * e.quantity, 0);
   };
+
   useEffect(() => {
     getData();
   }, []);
@@ -151,7 +179,7 @@ export const Cart = () => {
               </Heading>
             ) : (
               <Tbody>
-                {cartItems?.map((e) => {
+                {cartItems?.map((e,ins) => {
                   {
                     saved =
                       saved +
@@ -192,7 +220,7 @@ export const Cart = () => {
                           isDisabled={e.quantity === 1}
                           variant={"outline"}
                           m={"2px"}
-                          onClick={() => handleDEC(e.id, e.quantity - 1)}
+                          onClick={() => handleDEC(e.id, ins)}
                         >
                           -
                         </Button>
@@ -202,7 +230,7 @@ export const Cart = () => {
                         <Button
                           variant={"outline"}
                           m={"2px"}
-                          onClick={() => handleINC(e.id, e.quantity + 1)}
+                          onClick={() => handleINC(e.id,ins)}
                         >
                           +
                         </Button>

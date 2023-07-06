@@ -26,7 +26,6 @@ import Navbar from "./Home/Navbar";
 
 const Singlecardmen = () => {
   const { id } = useParams();
-  console.log(+id - 1);
   const toast = useToast();
   const { men } = useSelector((store) => {
     return store.MenReducer;
@@ -44,7 +43,6 @@ const Singlecardmen = () => {
     discount,
     quantity: 1,
   };
-  console.log(el);
   const handleAdd = () => {
     axios
       .post(process.env.REACT_APP_HOST+`cart`, obj)

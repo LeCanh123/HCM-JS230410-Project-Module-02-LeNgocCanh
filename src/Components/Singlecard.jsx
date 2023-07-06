@@ -26,7 +26,6 @@ import Navbar from "./Home/Navbar";
 
 const Singlecardwomen = () => {
   const { id } = useParams();
-  console.log(+id - 1);
   const toast = useToast();
   const { women } = useSelector((store) => {
     return store.MenReducer;
@@ -45,7 +44,6 @@ const Singlecardwomen = () => {
     discount,
     quantity: 1,
   };
-  console.log(el);
   const handleAdd = () => {
     axios
       .post(process.env.REACT_APP_HOST+`cart`, obj)
@@ -63,7 +61,6 @@ const Singlecardwomen = () => {
         console.log(err);
       });
   };
-  console.log(el);
   return (
     <>
       <Navbar />

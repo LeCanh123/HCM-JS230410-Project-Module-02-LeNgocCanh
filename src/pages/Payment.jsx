@@ -54,7 +54,6 @@ function Payment() {
     const value = e.target.value;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
-  console.log(data);
   const getTotalPrice = () => {
     return cartItems.reduce((total, e) => total + e.price * e.quantity, 0);
   };

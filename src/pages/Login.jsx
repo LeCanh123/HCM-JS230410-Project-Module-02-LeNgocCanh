@@ -27,20 +27,16 @@ export default function Login() {
   const navigate = useNavigate();
   let { isAuth, userData, afterLoginUser } = useSelector(
     (state) => {
-      console.log("🚀 ~ file: Login.jsx:30 ~ Login ~ state:", state)
       return state.AuthReducer
     }
   );
-console.log(userData);
   
   useEffect(() => {
-    console.log("use Efect");
     dispatch(getdata);
   }, [email]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(userData);
     let temp = userData.filter((el) => {
       return el.email == email && el.password == password;
     });
@@ -72,10 +68,7 @@ console.log(userData);
       dispatch(loginFunction(obj));
     }
   };
-  // console.log(isAuth, afterLoginUser);
-  // useEffect(() => {
-  //   dispatch(getdata);
-  // }, []);
+
   return (
     <Flex
       minH={"100vh"}

@@ -27,7 +27,6 @@ export const getmens = (paramObj) => (dispatch) => {
 };
 
 export const getwomens = (paramObj) => (dispatch) => {
-  console.log("women dang chay");
   dispatch({ type: MEN_REQUEST_PENDING });
   axios
     .get(process.env.REACT_APP_HOST+

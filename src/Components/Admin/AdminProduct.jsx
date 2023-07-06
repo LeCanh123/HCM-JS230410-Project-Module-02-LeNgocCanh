@@ -29,7 +29,6 @@ function AdminProduct() {
     axios
       .get(process.env.REACT_APP_HOST+`${category}`)
       .then((res) => {
-        // console.log(res.data)
         setMen(res.data);
       });
   };
@@ -38,7 +37,6 @@ function AdminProduct() {
   }, [men]);
 
   const handleDelete = (id) => {
-    console.log(id);
     axios
       .delete(process.env.REACT_APP_HOST+category+`/${id}`)
       .then((res) => {

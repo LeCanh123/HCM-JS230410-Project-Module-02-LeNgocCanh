@@ -30,14 +30,11 @@ export default function AdminLogin() {
       email,
       password,
     };
-console.log(obj);
     axios
       .get(process.env.REACT_APP_HOST+`adminLogin`)
       .then((res) => {
-        // console.log(res.data.token)
         setToken(res.data.token);
         setIsAuth(true);
-        console.log(res.data[0]);
         if(res.data[0].email==email&&res.data[0].password==password){
           toast({
             title: "Login Successfully.",
@@ -64,7 +61,6 @@ console.log(obj);
             isClosable: true,
             position: "top",
           });
-          //   console.log(error)
           setEmail("");
           setPassword("");
 
@@ -84,13 +80,11 @@ console.log(obj);
           isClosable: true,
           position: "top",
         });
-        //   console.log(error)
         setEmail("");
         setPassword("");
       });
   };
 
-  console.log(isAuth);
 
   return (
     <Flex

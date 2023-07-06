@@ -37,7 +37,6 @@ export const getdata = (dispatch) => {
 
 export const loginFunction = (payload) => (dispatch) => {
   dispatch({ type: SIGNIN_SUCCESS, payload: payload });
-  console.log(payload);
 };
 
 export const logout = (dispatch) => {

@@ -20,7 +20,6 @@ function ManageUsers() {
     axios
       .get(process.env.REACT_APP_HOST+`registeredUser`)
       .then((res) => {
-        // console.log(res.data)
         setUserData(res.data);
       })
       .catch((error) => {

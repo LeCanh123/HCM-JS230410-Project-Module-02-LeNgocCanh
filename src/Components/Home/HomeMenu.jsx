@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import "../../CSS/HomeMenu.css"
 
 const HomeMenu = () => {
-    localStorage.setItem("cartItems",0)
     return (
         <Flex
             height={{ base: "3.2rem", md: "4.94rem" }}

@@ -1,78 +1,26 @@
-// import {
-//   ADD_TO_CART,
-//   REMOVE_FROM_CART,
-//   INCREMENT_QUANTITY,
-//   DECREMENT_QUANTITY,
-// } from "./actionTypes";
 
-// const initialState = {
-//   cartItems: [],
-// };
-
-// export const reducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case ADD_TO_CART: {
-//       return { ...state, cartItems: action.payload };
-//     }
-
-//     case REMOVE_FROM_CART:
-//       return {
-//         ...state,
-//         cartItems: state.cartItems.filter((item) => item.id !== action.payload),
-//       };
-
-//     case INCREMENT_QUANTITY:
-//       return {
-//         ...state,
-//         cartItems: state.cartItems.map((item) =>
-//           item.id === action.payload
-//             ? { ...item, quanity: item.quanity + 1 }
-//             : item
-//         ),
-//       };
-
-//     case DECREMENT_QUANTITY:
-//       return {
-//         ...state,
-//         cartItems: state.cartItems.map((item) =>
-//           item.id === action.payload && item.quanity > 1
-//             ? { ...item, quanity: item.quanity - 1 }
-//             : item
-//         ),
-//       };
-
-//     default:
-//       return state;
-//   }
-// };
-
-
-
-/////sửa
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { Cart } from "../../pages/Cart";
 
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
     cartItems: [],
+    temp:""
   },
   reducers: {
     addToCart: (state, action) => {
-      state.cartItems.push(action.payload);
+      return {...state,cartItems:[...action.payload]};
     },
     addToCart1:(state, action) => {
-      state.cartItems=action.payload;
+      return {...state};
     },
     removeFromCart: (state, action) => {
-      state.cartItems = state.cartItems.filter(
-        (item) => item.id !== action.payload
-      );
+      return {...state,cartItems:[...action.payload]}
     },
     incrementQuantity: (state, action) => {
-      const item = state.cartItems.find((item) => item.id === action.payload);
-      if (item) {
-        item.quantity++;
-      }
+      return {...state,cartItems:[...action.payload.product]}
     },
     decrementQuantity: (state, action) => {
       const item = state.cartItems.find((item) => item.id === action.payload);
@@ -82,6 +30,97 @@ const cartSlice = createSlice({
     },
   },
 });
+
+export const handleAddToCart =
+  (payloadcartItems,el,checkIdCartItem) =>
+  async (dispatch) => {
+
+if(payloadcartItems.length==0&&checkIdCartItem=="false"){
+ // dispatch(signUpRequest());
+ try {
+  const response = await axios.post(
+    process.env.REACT_APP_HOST + "cart1",
+    el
+  ).then((res)=>{
+    dispatch(addToCart(res.data.product))
+  }).catch((e)=>{}
+
+  
+  );
+  // dispatch(signUpSuccess());
+} catch (e) {
+  // dispatch(signUpFailure());
+}
+
+  
+}else{
+
+      try {
+        let flag="true";
+
+        let payloadcartItems1= payloadcartItems.map(element => {
+          if(element.image==el.product[0].image){
+            flag="false"
+            return {...element,quantity:element.quantity+1}
+           
+          }else {return {...element}}
+        });
+
+
+
+        if(flag=="false"){
+          const response = await axios.put(
+            process.env.REACT_APP_HOST + "cart1/"+el.id,
+            {id:el.id,product:[...payloadcartItems1]}
+          ).then((res)=>{
+            dispatch(addToCart(res.data.product))
+          });
+          // dispatch(signUpSuccess());
+        }else{
+          const response = await axios.put(
+            process.env.REACT_APP_HOST + "cart1/"+el.id,
+            {id:el.id,product:[...payloadcartItems1,el.product[0]]}
+          ).then((res)=>{
+            dispatch(addToCart(res.data.product));
+          });
+          // dispatch(signUpSuccess());
+
+
+        }
+
+      } catch (e) {
+        // dispatch(signUpFailure());
+      }
+
+}
+
+
+  };
+
+
+
+
+  export const handleRemove =
+  (cartItems,e,id) =>
+  async (dispatch) => {
+    // dispatch(signUpRequest());
+    try {
+      let cartItems1=cartItems.filter((item)=>{
+        return item.image!=e.image
+      })
+      const response = await axios.put(
+        process.env.REACT_APP_HOST + "cart1/"+id,
+        {id:id,product:[...cartItems1]}
+      ).then((res)=>{
+        dispatch(removeFromCart(res.data))
+      });
+      // dispatch(signUpSuccess());
+    } catch (e) {
+      // dispatch(signUpFailure());
+    }
+  };
+
+
 
 export const { addToCart,addToCart1, removeFromCart, incrementQuantity, decrementQuantity } =
   cartSlice.actions;

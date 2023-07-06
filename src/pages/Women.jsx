@@ -19,10 +19,8 @@ export const Women = () => {
   const dispatch = useDispatch();
 
   const { women, isLoading, isError, total } = useSelector((store) => {
-    console.log(store);
     return store.MenReducer;
   });
-console.log(women);
   
   let Obj = {
     params: {
@@ -35,7 +33,6 @@ console.log(women);
 
 
   useEffect(() => {
-    console.log("effect");
     dispatch(fetchWomensData(Obj));
   }, [location.search]);
 

@@ -33,7 +33,6 @@ export const Men = () => {
 
   useEffect(() => {
     dispatch(fetchMensData(Obj));
-    console.log(total);
   }, [location.search]);
 
   return (

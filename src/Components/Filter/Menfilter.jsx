@@ -53,7 +53,6 @@ const Menfilter = ({ type }) => {
       page,
       category,
     };
-    console.log(params);
     order && (params.order = order);
     setSearchParams(params);
   }, [category, page, order]);
